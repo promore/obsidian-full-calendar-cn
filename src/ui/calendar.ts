@@ -15,6 +15,7 @@ import listPlugin from "@fullcalendar/list";
 import interactionPlugin from "@fullcalendar/interaction";
 import googleCalendarPlugin from "@fullcalendar/google-calendar";
 import iCalendarPlugin from "@fullcalendar/icalendar";
+import { getTranslations } from "../i18n/translations";
 
 // There is an issue with FullCalendar RRule support around DST boundaries which is fixed by this monkeypatch:
 // https://github.com/fullcalendar/fullcalendar/issues/5273#issuecomment-1360459342
@@ -54,6 +55,7 @@ interface ExtraRenderProps {
     ) => Promise<void>;
     toggleTask?: (event: EventApi, isComplete: boolean) => Promise<boolean>;
     forceNarrow?: boolean;
+    locale?: string;
 }
 
 export function renderCalendar(
@@ -61,6 +63,7 @@ export function renderCalendar(
     eventSources: EventSourceInput[],
     settings?: ExtraRenderProps
 ): Calendar {
+    const t = getTranslations('zh');
     const isMobile = window.innerWidth < 500;
     const isNarrow = settings?.forceNarrow || isMobile;
     const {
@@ -102,6 +105,7 @@ export function renderCalendar(
             rrulePlugin,
         ],
         googleCalendarApiKey: "AIzaSyDIiklFwJXaLWuT_4y6I9ZRVVsPuf4xGrk",
+        locale: settings?.locale || "zh-cn",
         initialView:
             settings?.initialView?.[isNarrow ? "mobile" : "desktop"] ||
             (isNarrow ? "timeGrid3Days" : "timeGridWeek"),
@@ -128,16 +132,24 @@ export function renderCalendar(
               }
             : false,
 
+        buttonText: {
+            today: t.today,
+            prev: t.prev,
+            next: t.next,
+            month: t.month,
+            week: t.week,
+            list: t.list,
+        },
         views: {
             timeGridDay: {
                 type: "timeGrid",
                 duration: { days: 1 },
-                buttonText: isNarrow ? "1" : "day",
+                buttonText: isNarrow ? "1" : t.day,
             },
             timeGrid3Days: {
                 type: "timeGrid",
                 duration: { days: 3 },
-                buttonText: "3",
+                buttonText: t.threeDays,
             },
         },
         firstDay: settings?.firstDay,

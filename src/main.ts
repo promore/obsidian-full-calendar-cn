@@ -1,3 +1,5 @@
+// 需要先安装 obsidian 类型声明文件
+// npm install --save-dev @types/obsidian
 import { MarkdownView, Notice, Plugin, TFile } from "obsidian";
 import {
     CalendarView,

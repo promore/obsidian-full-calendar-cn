@@ -2,6 +2,7 @@ import { DateTime } from "luxon";
 import * as React from "react";
 import { useEffect, useRef, useState } from "react";
 import { CalendarInfo, OFCEvent } from "../../types";
+import { getTranslations } from "../../i18n/translations";
 
 function makeChangeListener<T>(
     setState: React.Dispatch<React.SetStateAction<T>>,
@@ -35,7 +36,7 @@ const DayChoice = ({ code, label, isSelected, onClick }: DayChoiceProps) => (
         }}
         onClick={() => onClick(code)}
     >
-        <b>{label[0]}</b>
+        <b>{DAY_ABBR_ZH[code as keyof typeof DAY_ABBR_ZH] || label[0]}</b>
     </button>
 );
 
@@ -49,6 +50,26 @@ const DAY_MAP = {
     S: "Saturday",
 };
 
+const DAY_MAP_ZH = {
+    U: "星期日",
+    M: "星期一",
+    T: "星期二",
+    W: "星期三",
+    R: "星期四",
+    F: "星期五",
+    S: "星期六",
+};
+
+const DAY_ABBR_ZH = {
+    U: "日",
+    M: "一",
+    T: "二",
+    W: "三",
+    R: "四",
+    F: "五",
+    S: "六",
+};
+
 const DaySelect = ({
     value: days,
     onChange,
@@ -58,7 +79,7 @@ const DaySelect = ({
 }) => {
     return (
         <div>
-            {Object.entries(DAY_MAP).map(([code, label]) => (
+            {Object.entries(DAY_MAP_ZH).map(([code, label]) => (
                 <DayChoice
                     key={code}
                     code={code}
@@ -96,6 +117,9 @@ export const EditEvent = ({
     calendars,
     defaultCalendarIndex,
 }: EditEventProps) => {
+    // 获取当前语言设置，默认使用中文
+    const t = getTranslations('zh-cn');
+    const currentDayMap = DAY_MAP_ZH;
     const [date, setDate] = useState(
         initialEvent
             ? initialEvent.type === "single"
@@ -198,7 +222,7 @@ export const EditEvent = ({
         <>
             <div>
                 <p style={{ float: "right" }}>
-                    {open && <button onClick={open}>Open Note</button>}
+                    {open && <button onClick={open}>{t.openNote}</button>}
                 </p>
             </div>
 
@@ -209,7 +233,7 @@ export const EditEvent = ({
                         type="text"
                         id="title"
                         value={title}
-                        placeholder={"Add title"}
+                        placeholder={t.addTitle}
                         required
                         onChange={makeChangeListener(setTitle, (x) => x)}
                     />
@@ -243,7 +267,7 @@ export const EditEvent = ({
                                 >
                                     {cal.type === "local"
                                         ? cal.name
-                                        : "Daily Note"}
+                                        : t.dailyNote}
                                 </option>
                             ))}
                     </select>
@@ -289,7 +313,7 @@ export const EditEvent = ({
                     )}
                 </p>
                 <p>
-                    <label htmlFor="allDay">All day event </label>
+                    <label htmlFor="allDay">{t.allDayEvent} </label>
                     <input
                         id="allDay"
                         checked={allDay}
@@ -298,7 +322,7 @@ export const EditEvent = ({
                     />
                 </p>
                 <p>
-                    <label htmlFor="recurring">Recurring Event </label>
+                    <label htmlFor="recurring">{t.recurringEvent} </label>
                     <input
                         id="recurring"
                         checked={isRecurring}
@@ -314,7 +338,7 @@ export const EditEvent = ({
                             onChange={setDaysOfWeek}
                         />
                         <p>
-                            Starts recurring
+                            {t.startsRecurring}
                             <input
                                 type="date"
                                 id="startDate"
@@ -322,7 +346,7 @@ export const EditEvent = ({
                                 // @ts-ignore
                                 onChange={makeChangeListener(setDate, (x) => x)}
                             />
-                            and stops recurring
+                            {t.stopsRecurring}
                             <input
                                 type="date"
                                 id="endDate"
@@ -336,7 +360,7 @@ export const EditEvent = ({
                     </>
                 )}
                 <p>
-                    <label htmlFor="task">Task Event </label>
+                    <label htmlFor="task">{t.taskEvent} </label>
                     <input
                         id="task"
                         checked={isTask}
@@ -349,7 +373,7 @@ export const EditEvent = ({
 
                 {isTask && (
                     <>
-                        <label htmlFor="taskStatus">Complete? </label>
+                        <label htmlFor="taskStatus">{t.complete} </label>
                         <input
                             id="taskStatus"
                             checked={
@@ -374,7 +398,7 @@ export const EditEvent = ({
                         width: "100%",
                     }}
                 >
-                    <button type="submit"> Save Event </button>
+                    <button type="submit"> {t.saveEvent} </button>
                     <span>
                         {deleteEvent && (
                             <button
@@ -390,7 +414,7 @@ export const EditEvent = ({
                                 }}
                                 onClick={deleteEvent}
                             >
-                                Delete Event
+                                {t.deleteEvent}
                             </button>
                         )}
                     </span>

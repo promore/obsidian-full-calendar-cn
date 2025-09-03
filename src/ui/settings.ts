@@ -16,6 +16,7 @@ import { createElement } from "react";
 import { getDailyNoteSettings } from "obsidian-daily-notes-interface";
 import ReactModal from "./ReactModal";
 import { importCalendars } from "src/calendars/parsing/caldav/import";
+import { getTranslations } from "../i18n/translations";
 
 export interface FullCalendarSettings {
     calendarSources: CalendarInfo[];
@@ -27,6 +28,7 @@ export interface FullCalendarSettings {
     };
     timeFormat24h: boolean;
     clickToCreateEventFromMonthView: boolean;
+    locale: string;
 }
 
 export const DEFAULT_SETTINGS: FullCalendarSettings = {
@@ -39,30 +41,45 @@ export const DEFAULT_SETTINGS: FullCalendarSettings = {
     },
     timeFormat24h: false,
     clickToCreateEventFromMonthView: true,
+    locale: "zh-cn",
 };
 
 const WEEKDAYS = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
+    "sunday",
+    "monday",
+    "tuesday",
+    "wednesday",
+    "thursday",
+    "friday",
+    "saturday",
 ];
 
 const INITIAL_VIEW_OPTIONS = {
     DESKTOP: {
-        timeGridDay: "Day",
-        timeGridWeek: "Week",
-        dayGridMonth: "Month",
-        listWeek: "List",
+        timeGridDay: "day",
+        timeGridWeek: "week",
+        dayGridMonth: "month",
+        listWeek: "list",
     },
     MOBILE: {
-        timeGrid3Days: "3 Days",
-        timeGridDay: "Day",
-        listWeek: "List",
+        timeGrid3Days: "threeDays",
+        timeGridDay: "day",
+        listWeek: "list",
     },
+};
+
+const LOCALE_OPTIONS = {
+    "en": "English",
+    "zh-cn": "简体中文",
+    "zh-tw": "繁體中文",
+    "ja": "日本語",
+    "ko": "한국어",
+    "fr": "Français",
+    "de": "Deutsch",
+    "es": "Español",
+    "it": "Italiano",
+    "pt": "Português",
+    "ru": "Русский",
 };
 
 export function addCalendarButton(
@@ -72,6 +89,7 @@ export function addCalendarButton(
     submitCallback: (setting: CalendarInfo) => void,
     listUsedDirectories?: () => string[]
 ) {
+    const t = getTranslations('zh');
     let dropdown: DropdownComponent;
     const directories = app.vault
         .getAllLoadedFiles()
@@ -79,20 +97,20 @@ export function addCalendarButton(
         .map((f) => f.path);
 
     return new Setting(containerEl)
-        .setName("Calendars")
-        .setDesc("Add calendar")
+        .setName(t.calendars)
+        .setDesc(t.addCalendar)
         .addDropdown(
             (d) =>
                 (dropdown = d.addOptions({
-                    local: "Full note",
-                    dailynote: "Daily Note",
-                    icloud: "iCloud",
-                    caldav: "CalDAV",
-                    ical: "Remote (.ics format)",
+                    local: t.fullNote,
+                    dailynote: t.dailyNote,
+                    icloud: t.icloud,
+                    caldav: t.caldav,
+                    ical: t.remoteIcs,
                 }))
         )
         .addExtraButton((button) => {
-            button.setTooltip("Add Calendar");
+            button.setTooltip(t.addCalendar);
             button.setIcon("plus-with-circle");
             button.onClick(() => {
                 let modal = new ReactModal(app, async () => {
@@ -165,24 +183,26 @@ export function addCalendarButton(
 
 export class FullCalendarSettingTab extends PluginSettingTab {
     plugin: FullCalendarPlugin;
+    private t: ReturnType<typeof getTranslations>;
 
     constructor(app: App, plugin: FullCalendarPlugin) {
         super(app, plugin);
         this.plugin = plugin;
+        this.t = getTranslations('zh');
     }
 
     async display(): Promise<void> {
         const { containerEl } = this;
         containerEl.empty();
 
-        containerEl.createEl("h2", { text: "Calendar Preferences" });
+        containerEl.createEl("h2", { text: this.t.calendarPreferences });
         new Setting(containerEl)
-            .setName("Desktop Initial View")
-            .setDesc("Choose the initial view range on desktop devices.")
+            .setName(this.t.desktopInitialView)
+            .setDesc(this.t.desktopInitialViewDesc)
             .addDropdown((dropdown) => {
                 Object.entries(INITIAL_VIEW_OPTIONS.DESKTOP).forEach(
-                    ([value, display]) => {
-                        dropdown.addOption(value, display);
+                    ([value, translationKey]) => {
+                        dropdown.addOption(value, this.t[translationKey as keyof typeof this.t]);
                     }
                 );
                 dropdown.setValue(this.plugin.settings.initialView.desktop);
@@ -193,12 +213,12 @@ export class FullCalendarSettingTab extends PluginSettingTab {
             });
 
         new Setting(containerEl)
-            .setName("Mobile Initial View")
-            .setDesc("Choose the initial view range on mobile devices.")
+            .setName(this.t.mobileInitialView)
+            .setDesc(this.t.mobileInitialViewDesc)
             .addDropdown((dropdown) => {
                 Object.entries(INITIAL_VIEW_OPTIONS.MOBILE).forEach(
-                    ([value, display]) => {
-                        dropdown.addOption(value, display);
+                    ([value, translationKey]) => {
+                        dropdown.addOption(value, this.t[translationKey as keyof typeof this.t]);
                     }
                 );
                 dropdown.setValue(this.plugin.settings.initialView.mobile);
@@ -209,11 +229,11 @@ export class FullCalendarSettingTab extends PluginSettingTab {
             });
 
         new Setting(containerEl)
-            .setName("Starting Day of the Week")
-            .setDesc("Choose what day of the week to start.")
+            .setName(this.t.startingDayOfWeek)
+            .setDesc(this.t.startingDayOfWeekDesc)
             .addDropdown((dropdown) => {
-                WEEKDAYS.forEach((day, code) => {
-                    dropdown.addOption(code.toString(), day);
+                WEEKDAYS.forEach((translationKey, code) => {
+                    dropdown.addOption(code.toString(), this.t[translationKey as keyof typeof this.t]);
                 });
                 dropdown.setValue(this.plugin.settings.firstDay.toString());
                 dropdown.onChange(async (codeAsString) => {
@@ -223,8 +243,8 @@ export class FullCalendarSettingTab extends PluginSettingTab {
             });
 
         new Setting(containerEl)
-            .setName("24-hour format")
-            .setDesc("Display the time in a 24-hour format.")
+            .setName(this.t.timeFormat24h)
+            .setDesc(this.t.timeFormat24hDesc)
             .addToggle((toggle) => {
                 toggle.setValue(this.plugin.settings.timeFormat24h);
                 toggle.onChange(async (val) => {
@@ -234,8 +254,8 @@ export class FullCalendarSettingTab extends PluginSettingTab {
             });
 
         new Setting(containerEl)
-            .setName("Click on a day in month view to create event")
-            .setDesc("Switch off to open day view on click instead.")
+            .setName(this.t.createEventOnClick)
+            .setDesc(this.t.createEventOnClickDesc)
             .addToggle((toggle) => {
                 toggle.setValue(
                     this.plugin.settings.clickToCreateEventFromMonthView
@@ -246,7 +266,23 @@ export class FullCalendarSettingTab extends PluginSettingTab {
                 });
             });
 
-        containerEl.createEl("h2", { text: "Manage Calendars" });
+        new Setting(containerEl)
+            .setName(this.t.language)
+            .setDesc(this.t.languageDesc)
+            .addDropdown((dropdown) => {
+                Object.entries(LOCALE_OPTIONS).forEach(
+                    ([value, display]) => {
+                        dropdown.addOption(value, display);
+                    }
+                );
+                dropdown.setValue(this.plugin.settings.locale);
+                dropdown.onChange(async (locale) => {
+                    this.plugin.settings.locale = locale;
+                    await this.plugin.saveSettings();
+                });
+            });
+
+        containerEl.createEl("h2", { text: this.t.manageCalendars });
         addCalendarButton(
             this.app,
             this.plugin,

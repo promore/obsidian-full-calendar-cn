@@ -124,6 +124,7 @@ export class CalendarView extends ItemView {
         }
         this.fullCalendarView = renderCalendar(calendarEl, sources, {
             forceNarrow: this.inSidebar,
+            locale: this.plugin.settings.locale,
             eventClick: async (info) => {
                 try {
                     if (

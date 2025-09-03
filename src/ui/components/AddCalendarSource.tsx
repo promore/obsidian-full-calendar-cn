@@ -1,6 +1,7 @@
 import * as React from "react";
 import { useState } from "react";
 import { CalendarInfo } from "../../types";
+import { getTranslations } from "../../i18n/translations";
 
 type ChangeListener = <T extends Partial<CalendarInfo>>(
     fromString: (val: string) => T
@@ -18,6 +19,7 @@ function DirectorySelect<T extends Partial<CalendarInfo>>({
     changeListener,
     directories,
 }: DirectorySelectProps<T>) {
+    const t = getTranslations('zh');
     const dirOptions = [...directories];
     dirOptions.sort();
 
@@ -25,9 +27,9 @@ function DirectorySelect<T extends Partial<CalendarInfo>>({
     return (
         <div className="setting-item">
             <div className="setting-item-info">
-                <div className="setting-item-name">Directory</div>
+                <div className="setting-item-name">{t.directory}</div>
                 <div className="setting-item-description">
-                    Directory to store events
+                    {t.directoryDesc}
                 </div>
             </div>
             <div className="setting-item-control">
@@ -40,7 +42,7 @@ function DirectorySelect<T extends Partial<CalendarInfo>>({
                     }))}
                 >
                     <option value="" disabled hidden>
-                        Choose a directory
+                        {t.chooseDirectory}
                     </option>
                     {dirOptions.map((o, idx) => (
                         <option key={idx} value={o}>
@@ -62,12 +64,13 @@ function ColorPicker<T extends Partial<CalendarInfo>>({
     source,
     changeListener,
 }: BasicProps<T>) {
+    const t = getTranslations('zh');
     return (
         <div className="setting-item">
             <div className="setting-item-info">
-                <div className="setting-item-name">Color</div>
+                <div className="setting-item-name">{t.color}</div>
                 <div className="setting-item-description">
-                    The color of events on the calendar
+                    {t.colorDesc}
                 </div>
             </div>
             <div className="setting-item-control">
@@ -87,13 +90,14 @@ function UrlInput<T extends Partial<CalendarInfo>>({
     source,
     changeListener,
 }: BasicProps<T>) {
+    const t = getTranslations('zh');
     let sourceWithUrl = source as SourceWith<T, { url: undefined }>;
     return (
         <div className="setting-item">
             <div className="setting-item-info">
-                <div className="setting-item-name">Url</div>
+                <div className="setting-item-name">{t.url}</div>
                 <div className="setting-item-description">
-                    Url of the server
+                    {t.urlDesc}
                 </div>
             </div>
             <div className="setting-item-control">
@@ -115,13 +119,14 @@ function UsernameInput<T extends Partial<CalendarInfo>>({
     source,
     changeListener,
 }: BasicProps<T>) {
+    const t = getTranslations('zh');
     let sourceWithUsername = source as SourceWith<T, { username: undefined }>;
     return (
         <div className="setting-item">
             <div className="setting-item-info">
-                <div className="setting-item-name">Username</div>
+                <div className="setting-item-name">{t.username}</div>
                 <div className="setting-item-description">
-                    Username for the account
+                    {t.usernameDesc}
                 </div>
             </div>
             <div className="setting-item-control">
@@ -144,13 +149,14 @@ function HeadingInput<T extends Partial<CalendarInfo>>({
     changeListener,
     headings,
 }: BasicProps<T> & { headings: string[] }) {
+    const t = getTranslations('zh');
     let sourceWithHeading = source as SourceWith<T, { heading: undefined }>;
     return (
         <div className="setting-item">
             <div className="setting-item-info">
-                <div className="setting-item-name">Heading</div>
+                <div className="setting-item-name">{t.heading}</div>
                 <div className="setting-item-description">
-                    Heading to store events under in the daily note.
+                    {t.headingDesc}
                 </div>
             </div>
             <div className="setting-item-control">
@@ -164,7 +170,7 @@ function HeadingInput<T extends Partial<CalendarInfo>>({
                         }))}
                     >
                         <option value="" disabled hidden>
-                            Choose a heading
+                            {t.chooseHeading}
                         </option>
                         {headings.map((o, idx) => (
                             <option key={idx} value={o}>
@@ -192,13 +198,14 @@ function PasswordInput<T extends Partial<CalendarInfo>>({
     source,
     changeListener,
 }: BasicProps<T>) {
+    const t = getTranslations('zh');
     let sourceWithPassword = source as SourceWith<T, { password: undefined }>;
     return (
         <div className="setting-item">
             <div className="setting-item-info">
-                <div className="setting-item-name">Password</div>
+                <div className="setting-item-name">{t.password}</div>
                 <div className="setting-item-description">
-                    Password for the account
+                    {t.passwordDesc}
                 </div>
             </div>
             <div className="setting-item-control">
@@ -229,12 +236,13 @@ export const AddCalendarSource = ({
     headings,
     submit,
 }: AddCalendarProps) => {
+    const t = getTranslations('zh');
     const isCalDAV = source.type === "caldav";
 
     const [setting, setSettingState] = useState(source);
     const [submitting, setSubmitingState] = useState(false);
     const [submitText, setSubmitText] = useState(
-        isCalDAV ? "Import Calendars" : "Add Calendar"
+        isCalDAV ? t.importCalendars : t.addCalendar
     );
 
     function makeChangeListener<T extends Partial<CalendarInfo>>(
@@ -247,7 +255,7 @@ export const AddCalendarSource = ({
         e.preventDefault();
         if (!submitting) {
             setSubmitingState(true);
-            setSubmitText(isCalDAV ? "Importing Calendars" : "Adding Calendar");
+            setSubmitText(isCalDAV ? t.importingCalendars : t.addingCalendar);
             await submit(setting as CalendarInfo);
         }
     };

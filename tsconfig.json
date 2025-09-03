@@ -4,7 +4,7 @@
 		"inlineSourceMap": true,
 		"inlineSources": true,
 		"module": "ESNext",
-		"target": "ES6",
+		"target": "ES2018",
 		"allowJs": true,
 		"noImplicitAny": true,
 		"strict": true,
@@ -12,8 +12,12 @@
         "esModuleInterop": true,
 		"importHelpers": true,
 		"isolatedModules": true,
-		"lib": ["DOM", "ES5", "ES6", "ES7"],
-		"jsx": "react"
+		"lib": ["DOM", "ES2018"],
+		"jsx": "react",
+		"skipLibCheck": true,
+		"paths": {
+			"obsidian": ["./node_modules/obsidian"]
+		}
 	},
 	"include": ["**/*.ts"]
 }

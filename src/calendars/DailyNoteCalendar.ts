@@ -297,9 +297,9 @@ export default class DailyNoteCalendar extends EditableCalendar {
             throw new Error("Cannot create a recurring event in a daily note.");
         }
         const m = moment(event.date);
-        let file = getDailyNote(m, getAllDailyNotes()) as TFile;
+        let file = getDailyNote(m, getAllDailyNotes());
         if (!file) {
-            file = (await createDailyNote(m)) as TFile;
+            file = await createDailyNote(m);
         }
         const metadata = await this.app.waitForMetadata(file);
 
@@ -375,9 +375,9 @@ export default class DailyNoteCalendar extends EditableCalendar {
             console.debug("daily note event moving to a new file.");
             // TODO: Factor this out with the createFile path.
             const m = moment(newEvent.date);
-            let newFile = getDailyNote(m, getAllDailyNotes()) as TFile;
+            let newFile = getDailyNote(m, getAllDailyNotes());
             if (!newFile) {
-                newFile = (await createDailyNote(m)) as TFile;
+                newFile = await createDailyNote(m);
             }
             await this.app.read(newFile);
 
