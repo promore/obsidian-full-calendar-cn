@@ -63,7 +63,7 @@ export function renderCalendar(
     eventSources: EventSourceInput[],
     settings?: ExtraRenderProps
 ): Calendar {
-    const t = getTranslations('zh');
+    const t = getTranslations("zh");
     const isMobile = window.innerWidth < 500;
     const isNarrow = settings?.forceNarrow || isMobile;
     const {

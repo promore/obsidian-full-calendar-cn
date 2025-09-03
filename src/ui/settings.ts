@@ -69,17 +69,17 @@ const INITIAL_VIEW_OPTIONS = {
 };
 
 const LOCALE_OPTIONS = {
-    "en": "English",
+    en: "English",
     "zh-cn": "简体中文",
     "zh-tw": "繁體中文",
-    "ja": "日本語",
-    "ko": "한국어",
-    "fr": "Français",
-    "de": "Deutsch",
-    "es": "Español",
-    "it": "Italiano",
-    "pt": "Português",
-    "ru": "Русский",
+    ja: "日本語",
+    ko: "한국어",
+    fr: "Français",
+    de: "Deutsch",
+    es: "Español",
+    it: "Italiano",
+    pt: "Português",
+    ru: "Русский",
 };
 
 export function addCalendarButton(
@@ -89,7 +89,7 @@ export function addCalendarButton(
     submitCallback: (setting: CalendarInfo) => void,
     listUsedDirectories?: () => string[]
 ) {
-    const t = getTranslations('zh');
+    const t = getTranslations("zh");
     let dropdown: DropdownComponent;
     const directories = app.vault
         .getAllLoadedFiles()
@@ -188,7 +188,7 @@ export class FullCalendarSettingTab extends PluginSettingTab {
     constructor(app: App, plugin: FullCalendarPlugin) {
         super(app, plugin);
         this.plugin = plugin;
-        this.t = getTranslations('zh');
+        this.t = getTranslations("zh");
     }
 
     async display(): Promise<void> {
@@ -202,7 +202,10 @@ export class FullCalendarSettingTab extends PluginSettingTab {
             .addDropdown((dropdown) => {
                 Object.entries(INITIAL_VIEW_OPTIONS.DESKTOP).forEach(
                     ([value, translationKey]) => {
-                        dropdown.addOption(value, this.t[translationKey as keyof typeof this.t]);
+                        dropdown.addOption(
+                            value,
+                            this.t[translationKey as keyof typeof this.t]
+                        );
                     }
                 );
                 dropdown.setValue(this.plugin.settings.initialView.desktop);
@@ -218,7 +221,10 @@ export class FullCalendarSettingTab extends PluginSettingTab {
             .addDropdown((dropdown) => {
                 Object.entries(INITIAL_VIEW_OPTIONS.MOBILE).forEach(
                     ([value, translationKey]) => {
-                        dropdown.addOption(value, this.t[translationKey as keyof typeof this.t]);
+                        dropdown.addOption(
+                            value,
+                            this.t[translationKey as keyof typeof this.t]
+                        );
                     }
                 );
                 dropdown.setValue(this.plugin.settings.initialView.mobile);
@@ -233,7 +239,10 @@ export class FullCalendarSettingTab extends PluginSettingTab {
             .setDesc(this.t.startingDayOfWeekDesc)
             .addDropdown((dropdown) => {
                 WEEKDAYS.forEach((translationKey, code) => {
-                    dropdown.addOption(code.toString(), this.t[translationKey as keyof typeof this.t]);
+                    dropdown.addOption(
+                        code.toString(),
+                        this.t[translationKey as keyof typeof this.t]
+                    );
                 });
                 dropdown.setValue(this.plugin.settings.firstDay.toString());
                 dropdown.onChange(async (codeAsString) => {
@@ -270,11 +279,9 @@ export class FullCalendarSettingTab extends PluginSettingTab {
             .setName(this.t.language)
             .setDesc(this.t.languageDesc)
             .addDropdown((dropdown) => {
-                Object.entries(LOCALE_OPTIONS).forEach(
-                    ([value, display]) => {
-                        dropdown.addOption(value, display);
-                    }
-                );
+                Object.entries(LOCALE_OPTIONS).forEach(([value, display]) => {
+                    dropdown.addOption(value, display);
+                });
                 dropdown.setValue(this.plugin.settings.locale);
                 dropdown.onChange(async (locale) => {
                     this.plugin.settings.locale = locale;

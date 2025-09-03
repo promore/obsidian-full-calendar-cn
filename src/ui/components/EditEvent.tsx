@@ -118,7 +118,7 @@ export const EditEvent = ({
     defaultCalendarIndex,
 }: EditEventProps) => {
     // 获取当前语言设置，默认使用中文
-    const t = getTranslations('zh-cn');
+    const t = getTranslations("zh-cn");
     const currentDayMap = DAY_MAP_ZH;
     const [date, setDate] = useState(
         initialEvent
