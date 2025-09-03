@@ -1,3 +1,12 @@
+# 该版本是对官方插件的中文汉化，使用 trae AI code 自动编码的，本人已经在自己的机器上测试过，请放心服用！
+
+-   如果你对源码没有兴趣或者想直接使用该汉化插件，请下载 main.js & styles.css 替换掉插件目录下的文件。
+-   保险起见，你最好先备份一下你的插件目录下的文件。
+-   备份完成后，将 main.js & styles.css 替换掉插件目录下的文件。
+-   重启 Obsidian。
+
+    以下是原始版本的信息。
+
 # Full Calendar Plugin
 
 ![Obsidian Downloads](https://img.shields.io/badge/dynamic/json?logo=obsidian&color=%23483699&label=downloads&query=%24%5B%22obsidian-full-calendar%22%5D.downloads&url=https%3A%2F%2Fraw.githubusercontent.com%2Fobsidianmd%2Fobsidian-releases%2Fmaster%2Fcommunity-plugin-stats.json)
