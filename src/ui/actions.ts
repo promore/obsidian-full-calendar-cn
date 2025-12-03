@@ -20,17 +20,12 @@ export async function openFileForEvent(
     const {
         location: { path, lineNumber },
     } = details;
-    let leaf = workspace.getMostRecentLeaf();
     const file = vault.getAbstractFileByPath(path);
     if (!(file instanceof TFile)) {
         return;
     }
-    if (!leaf) {
-        return;
-    }
-    if (leaf.getViewState().pinned) {
-        leaf = workspace.getLeaf("tab");
-    }
+    // 总是在新标签页打开文件
+    const leaf = workspace.getLeaf("tab");
     await leaf.openFile(file);
     if (lineNumber && leaf.view instanceof MarkdownView) {
         leaf.view.editor.setCursor({ line: lineNumber, ch: 0 });
