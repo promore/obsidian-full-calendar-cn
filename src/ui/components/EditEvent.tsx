@@ -172,9 +172,11 @@ export const EditEvent = ({
     );
 
     const [isTask, setIsTask] = useState(
-        initialEvent?.type === "single" &&
-            initialEvent.completed !== undefined &&
-            initialEvent.completed !== null
+        initialEvent
+            ? initialEvent?.type === "single" &&
+                  initialEvent.completed !== undefined &&
+                  initialEvent.completed !== null
+            : true // 新增事件时默认选中
     );
 
     const titleRef = useRef<HTMLInputElement>(null);
@@ -236,6 +238,7 @@ export const EditEvent = ({
                         placeholder={t.addTitle}
                         required
                         onChange={makeChangeListener(setTitle, (x) => x)}
+                        style={{ width: "260px" }}
                     />
                 </p>
                 <p>
