@@ -112,6 +112,12 @@ export function renderCalendar(
         nowIndicator: true,
         scrollTimeReset: false,
         dayMaxEvents: true,
+        slotDuration: "00:30:00",
+        slotMinTime: "08:00:00", // 最早显示时间 08:00
+        slotMaxTime: "23:00:00", // 最晚显示时间 23:00
+        scrollTime: "08:30:00",
+        eventMinHeight: 10,
+        weekNumbers: true,
 
         headerToolbar: !isNarrow
             ? {
